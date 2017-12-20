@@ -44,6 +44,8 @@ public class MainActivity extends AppCompatActivity {
     ArrayAdapter adapter;
     ListAdapter adapterGroup;
     ListView listaGrupo;
+    ImageButton btnShare;
+    Intent shareIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,21 +54,7 @@ public class MainActivity extends AppCompatActivity {
         carregarGrupos();
 
         final CodigoBD code = new CodigoBD(getApplicationContext());
-        /*
-        for(Codigo c : code.all()){
 
-            Log.d("PDMLog",c.toString());
-            code.deletarCodigo(c);
-        }
-
-        Codigo codigozim = new Codigo("dfd", "dffd", "df", 15);
-        Codigo codigo2 = new Codigo("dfd", "dfd", "haha", 15);
-        Codigo codigo3 = new Codigo("dfdf", "dfd", "ihuu", 17);
-        code.salvarCodigo(codigozim);
-        code.salvarCodigo(codigo2);
-        code.salvarCodigo(codigo3);
-
-*/
         Button btnLerCod = (Button) findViewById(R.id.NewCode);
         btnLerCod.setOnClickListener(new android.view.View.OnClickListener() {
             public void onClick(View v) {
@@ -90,12 +78,15 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
+
+
     }
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         final MenuItem menuDelete = menu.add("Excluir grupo");
         final MenuItem menuUpdate = menu.add("Editar grupo");
+        final MenuItem menuShare = menu.add("Compartilhar Grupo");
         menuDelete.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
@@ -127,13 +118,34 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
+
+        menuShare.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                listaGrupo.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                    @Override
+                    public boolean onItemLongClick(AdapterView<?> adapter, View view, int i, long l) {
+
+                        CodigoBD codigo = new CodigoBD(MainActivity.this);
+
+                        ArrayList<Codigo> lista = codigo.findAllByGroup(l);
+
+                        shareIntent = new Intent();
+                        shareIntent.setAction(Intent.ACTION_SEND);
+                        //String texto = "Olá sou um texto compartilhado";
+
+                        shareIntent.putExtra(Intent.EXTRA_TEXT, lista.toString());
+                        shareIntent.setType("text/plain");
+                        startActivity(shareIntent);
+
+                        return true;
+                    }
+                });
+                return false;
+            }
+        });
     }
-/*
-    protected void onResume(){
-        super.onResume();
-        carregarGrupos();
-    }
-*/
+
     protected void returnMain() {
         ImageButton returnMain = (ImageButton) findViewById(R.id.returnMain);
         returnMain.setOnClickListener(new View.OnClickListener() {
@@ -145,28 +157,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-/*
-    public void carregarGrupos(){
-        dbHelper = new GrupoBD(this);
-        listviewGrupos = dbHelper.getLista();
-        dbHelper.close();
 
-        if(listviewGrupos != null){
-            adapterGroup = new GrupoAdapter(
-                    (ArrayList<Grupo>) dbHelper.all(), getLayoutInflater());
-            lista.setAdapter(adapter);
-        }
-
-        lista.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                sendStatusIdWhenChangeActivity(adapter, position);
-            }
-        });
-
-    }
-*/
     private void carregarGrupos() {
         listaGrupo = (ListView) findViewById(R.id.listviewgrupos);
         dbHelper = new GrupoBD(this);
@@ -181,39 +172,13 @@ public class MainActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 sendStatusIdWhenChangeActivity(adapterGroup, position);
             }
+
+
+
         });
         registerForContextMenu(listaGrupo);
     }
 
-    protected void notificarNovoGrupo() {
-        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this);
-        mBuilder.setSmallIcon(android.R.drawable.ic_menu_info_details);
-        mBuilder.setContentTitle("Novo grupo criado!");
-        mBuilder.setContentText("Você criou novo grupo, cadastre codigos nele!");
-
-        //ao clicar na notificação ele tira o icone
-        mBuilder.setAutoCancel(true);
-        //barra de progresso. Se verdadeiro com tempo indefinido, se falso com tempo na metade
-        //mBuilder.setProgress(100, 50, true);
-        //define a cor da luz que pisca da notificação
-        mBuilder.setLights(Color.GREEN, 500, 500);
-        //define para o toque da notificação ser o toque padrao do celular
-        Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
-        //som padrao de alarme
-        mBuilder.setSound(alarmSound);
-        //notificação acontecendo. Nesse caso não pode fechar a notificação (PS: desabilitar auto cancel)
-        //mBuilder.setOngoing(true);
-        //passa a classe que quer que seja aberta quando clica
-        Intent resultIntent = new Intent(this, ReadCodeActivity.class);
-
-        PendingIntent resultPendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, resultIntent, 0);
-        mBuilder.setContentIntent(resultPendingIntent);
-
-        NotificationManager mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-
-        //cria uma notificação e um id
-        mNotificationManager.notify(1234, mBuilder.build());
-    }
 
     protected boolean camposEstaoVazios(EditText text) {
         return text.getText().toString().trim().equals("") || text.getText().toString().trim().equals("");
