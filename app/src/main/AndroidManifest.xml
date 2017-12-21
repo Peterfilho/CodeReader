@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.peterson.codereader2">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -29,6 +31,7 @@
         <activity android:name=".activities.ReadCodeActivity" />
         <activity android:name=".activities.NovoGrupo" />
         <activity android:name=".activities.ListaCodigos"></activity>
+        <activity android:name=".activities.AboutActivity"></activity>
     </application>
 
 </manifest>

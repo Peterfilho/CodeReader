@@ -2,6 +2,7 @@ package com.example.peterson.codereader2.activities;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.media.RingtoneManager;
@@ -9,8 +10,11 @@ import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.app.NotificationCompat;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.ContextMenu;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -46,12 +50,15 @@ public class MainActivity extends AppCompatActivity {
     ListView listaGrupo;
     ImageButton btnShare;
     Intent shareIntent;
+    private MenuInflater menuInflater;
+    private Toolbar mToolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         carregarGrupos();
+        setToolbar();
 
         final CodigoBD code = new CodigoBD(getApplicationContext());
 
@@ -80,6 +87,31 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
+    }
+
+    public void setToolbar() {
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.menu, menu);
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menuSobre:
+                Intent intent = new Intent(this, AboutActivity.class);
+                startActivity(intent);
+                break;
+        }
+        return true;
     }
 
     @Override
@@ -178,8 +210,12 @@ public class MainActivity extends AppCompatActivity {
         });
         registerForContextMenu(listaGrupo);
     }
-
-
+/*
+    protected void changeActivity(Context context, Class nameClass) {
+        Intent intent = new Intent(context, nameClass);
+        startActivity(intent);
+    }
+*/
     protected boolean camposEstaoVazios(EditText text) {
         return text.getText().toString().trim().equals("") || text.getText().toString().trim().equals("");
     }

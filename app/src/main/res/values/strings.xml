@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">BarCode Reader</string>
+    <string name="about">Sobre</string>
 </resources>
