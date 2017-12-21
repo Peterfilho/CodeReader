@@ -3,4 +3,6 @@
     <color name="colorPrimary">#eff702</color>
     <color name="colorPrimaryDark">#f2df35</color>
     <color name="colorAccent">#f2e25f</color>
+    <color name="colorLoadingScreen">#FFEE0D</color>
+    <color name="colorLoadingScreenText">#171517</color>
 </resources>

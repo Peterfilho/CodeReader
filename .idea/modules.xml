@@ -2,11 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/CodeReader.iml" filepath="$PROJECT_DIR$/CodeReader.iml" />
       <module fileurl="file://$PROJECT_DIR$/CodeReader UTFPR.iml" filepath="$PROJECT_DIR$/CodeReader UTFPR.iml" />
-      <module fileurl="file://$PROJECT_DIR$/CodeReader2.iml" filepath="$PROJECT_DIR$/CodeReader2.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/java-master.iml" filepath="$PROJECT_DIR$/java-master.iml" />
     </modules>
   </component>
 </project>
